@@ -1,34 +1,28 @@
-import {dbConnect} from 'utils/db';
-import Task from 'models/task';
+import Task from "models/Task";
+import { dbConnect } from "utils/mongoose";
 
-dbConnect()
-const getTasks = async (req, res) => {
-    const tasks = await Task.find();
-    res.json(tasks);
-}
-const createTask = async (req, res) => {
-    console.log(req.body);
-    const task = new Task(req.body);
-    const result = await task.save();
-    return res.status(201).json(result);
-}
+dbConnect();
 
-export default async function handler(req, res) {
-    switch (req.method) {
-        case 'GET':
-            await getTasks(req, res);
-            break;
-        case 'POST':
-            await createTask(req, res);
-            break;
-        case 'PUT':
-            await updateTask(req, res);
-            break;
-        case 'DELETE':
-            await deleteTask(req, res);
-            break;
-        default:
-            res.status(405).send(`Method ${req.method} not allowed`);
-    }
+export default async (req, res) => {
+  const { method, body } = req;
+
+  switch (method) {
+    case "GET":
+      try {
+        const tasks = await Task.find();
+        return res.status(200).json(tasks);
+      } catch (error) {
+        return res.status(400).json({ msg: error.message });
+      }
+    case "POST":
+      try {
+        const newTask = new Task(body);
+        const savedTask = await newTask.save();
+        return res.status(201).json(savedTask);
+      } catch (error) {
+        return res.status(400).json({ msg: error.message });
+      }
+    default:
+      return res.status(400).json({ msg: "This method is not supported" });
   }
-  
+};

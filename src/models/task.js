@@ -1,22 +1,24 @@
-import {Schema, model, models} from 'mongoose';
-
-const newSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    price:{
-        type: Number,
-        required: true
+import { Schema, model, models } from "mongoose";
+const date = new Date();
+const TaskSchema = new Schema(
+  {
+    title: {
+      type: [String],
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: [String],
+      required: true,
     },
-    image: {
-        type: String,
-        required: true
-        }
-})
+    price: {
+      type: [Number],
+      required: true,
+    },
+    mesa:{
+      type: [String],
+      required: true,
+    },
+  }
+);
 
-export default models.Task || model('Task', newSchema);
+export default models.Task || model("Task", TaskSchema);
